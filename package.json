@@ -43,7 +43,8 @@
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
     "prepare": "bob build",
-    "release": "release-it"
+    "release": "release-it",
+    "postinstall": "patch-package"
   },
   "keywords": [
     "react-native",
@@ -184,5 +185,25 @@
     "type": "legacy-module",
     "languages": "kotlin-swift",
     "version": "0.48.3"
+  },
+  "dependencies": {
+    "@dfinity/agent": "^1.2.0",
+    "@dfinity/candid": "^1.2.0",
+    "@dfinity/identity": "^1.2.0",
+    "@dfinity/principal": "^1.2.0",
+    "amcl-js": "^3.1.0",
+    "base-64": "^1.0.0",
+    "big-integer": "^1.6.52",
+    "buffer": "^6.0.3",
+    "crypto": "^1.0.1",
+    "fast-text-encoding": "^1.0.6",
+    "patch-package": "^8.0.0",
+    "react-native-fetch-api": "^3.0.0",
+    "react-native-get-random-values": "^1.11.0",
+    "react-native-passkey": "^3.1.0",
+    "react-native-polyfill-globals": "^3.1.0",
+    "react-native-url-polyfill": "^2.0.0",
+    "text-encoding": "^0.7.0",
+    "web-streams-polyfill": "^4.1.0"
   }
 }

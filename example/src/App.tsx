@@ -1,17 +1,14 @@
-import { multiply } from 'react-native-w3meet-auth';
-import { Text, View, StyleSheet } from 'react-native';
-import { useState, useEffect } from 'react';
+import { View, StyleSheet, Button } from 'react-native';
+import { Authenticator } from 'react-native-w3meet-auth';
+
+const authenticator = Authenticator.config({
+  canisterId: 'your-canister-id',
+});
 
 export default function App() {
-  const [result, setResult] = useState<number | undefined>();
-
-  useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
-
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Button title="SignIn" onPress={() => authenticator.signIn()} />
     </View>
   );
 }

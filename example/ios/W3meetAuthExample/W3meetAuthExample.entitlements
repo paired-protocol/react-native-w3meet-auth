@@ -4,7 +4,8 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>webcredentials:vercel-endpoint-git-main-nadson-fernandos-projects.vercel.app/</string>
+		<string>webcredentials:vercel-endpoint.vercel.app</string>
+		<string>applinks:vercel-endpoint.vercel.app</string>
 	</array>
 </dict>
 </plist>

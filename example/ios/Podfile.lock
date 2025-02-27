@@ -47,6 +47,7 @@ PODS:
     - React-RCTText (= 0.78.0)
     - React-RCTVibration (= 0.78.0)
   - React-callinvoker (0.78.0)
+  - React-Codegen (0.1.0)
   - React-Core (0.78.0):
     - glog
     - hermes-engine
@@ -1238,6 +1239,13 @@ PODS:
     - React-jsiexecutor
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
+  - react-native-passkey (3.1.0):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - ReactCommon/turbomodule/core
   - React-NativeModulesApple (0.78.0):
     - glog
     - hermes-engine
@@ -1526,7 +1534,7 @@ PODS:
     - React-perflogger (= 0.78.0)
     - React-utils (= 0.78.0)
   - SocketRocket (0.7.1)
-  - W3meetAuth (0.1.0):
+  - W3meetAuth (0.1.5):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1539,6 +1547,7 @@ PODS:
     - React-featureflags
     - React-graphics
     - React-ImageManager
+    - react-native-passkey
     - React-NativeModulesApple
     - React-RCTFabric
     - React-rendererdebug
@@ -1589,6 +1598,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
+  - react-native-passkey (from `../node_modules/react-native-passkey`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-performancetimeline (from `../node_modules/react-native/ReactCommon/react/performance/timeline`)
@@ -1622,6 +1632,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - React-Codegen
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -1700,6 +1711,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   React-microtasksnativemodule:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
+  react-native-passkey:
+    :path: "../node_modules/react-native-passkey"
   React-NativeModulesApple:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios"
   React-perflogger:
@@ -1775,6 +1788,7 @@ SPEC CHECKSUMS:
   RCTTypeSafety: c135dd2bf50402d87fd12884cbad5d5e64850edd
   React: b229c49ed5898dab46d60f61ed5a0bfa2ee2fadb
   React-callinvoker: 2ac508e92c8bd9cf834cc7d7787d94352e4af58f
+  React-Codegen: 4b8b4817cea7a54b83851d4c1f91f79aa73de30a
   React-Core: 325b4f6d9162ae8b9a6ff42fe78e260eb124180d
   React-CoreModules: 558041e5258f70cd1092f82778d07b8b2ff01897
   React-cxxreact: 8fff17cbe76e6a8f9991b59552e1235429f9c74b
@@ -1799,6 +1813,7 @@ SPEC CHECKSUMS:
   React-logger: 018826bfd51b9f18e87f67db1590bc510ad20664
   React-Mapbuffer: 3c11cee7737609275c7b66bd0b1de475f094cedf
   React-microtasksnativemodule: 843f352b32aacbe13a9c750190d34df44c3e6c2c
+  react-native-passkey: 3aac247c18127443ef4a002b59d8e12dc7e99f2e
   React-NativeModulesApple: 88433b6946778bea9c153e27b671de15411bf225
   React-perflogger: 9e8d3c0dc0194eb932162812a168aa5dc662f418
   React-performancetimeline: 5a2d6efef52bdcefac079c7baa30934978acd023
@@ -1828,9 +1843,9 @@ SPEC CHECKSUMS:
   ReactCodegen: 008c319179d681a6a00966edfc67fda68f9fbb2e
   ReactCommon: 0c097b53f03d6bf166edbcd0915da32f3015dd90
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  W3meetAuth: 143847d61778dd299eac8b6794e0a7d39dc6e8cf
+  W3meetAuth: ebcc2c9bd617042f6af3126e7e05452978ec1bd7
   Yoga: afd04ff05ebe0121a00c468a8a3c8080221cb14c
 
-PODFILE CHECKSUM: 687aa5102f591629b850c37e751d4037c25230e3
+PODFILE CHECKSUM: 84399e0ee952a98b4b43eb48dfbffe08abd2a7e7
 
 COCOAPODS: 1.16.2

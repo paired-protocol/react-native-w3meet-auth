@@ -1,6 +1,6 @@
 {
   "name": "react-native-w3meet-auth",
-  "version": "0.1.0",
+  "version": "0.1.6",
   "description": "React Native W3meet Auth",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
@@ -34,7 +34,8 @@
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__",
-    "!**/.*"
+    "!**/.*",
+    "patches"
   ],
   "scripts": {
     "example": "yarn workspace react-native-w3meet-auth-example",
@@ -53,7 +54,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/unpaired-eth/react-native-w3meet-auth.git.git"
+    "url": "git+https://github.com/unpaired-eth/react-native-w3meet-auth.git"
   },
   "author": "Nadson Fernando <nadson.fernando@unpaired.com> (https://github.com/unpaired-eth/react-native-w3meet-auth.git)",
   "license": "MIT",

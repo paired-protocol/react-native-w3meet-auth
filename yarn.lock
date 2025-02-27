@@ -5413,9 +5413,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.73":
-  version: 1.5.105
-  resolution: "electron-to-chromium@npm:1.5.105"
-  checksum: 21a7a080140567b347d97fcc6c7f96c0d9e7effe6b9f8b395126a54f556732e08feb74b3aca8c65bb600b4160c9d9b6c1e1ac024f850645994d3cf3cdf81e01f
+  version: 1.5.107
+  resolution: "electron-to-chromium@npm:1.5.107"
+  checksum: a76ab714041e180dd2a90cbd2fbbe13ae73d0a54e5ba15a9b308f847192aae797d0ff58aedc8c256e302084d7a6d13820aeb96a0db480c16a44eecf50eb26ccf
   languageName: node
   linkType: hard
 
@@ -6356,9 +6356,9 @@ __metadata:
   linkType: hard
 
 "flow-parser@npm:0.*":
-  version: 0.261.2
-  resolution: "flow-parser@npm:0.261.2"
-  checksum: 9f44991ddcc5870cec657546cc7e32582945ffde2e54fa7b786ece6c76a7e345b9ad584763375d00b147cc499d41ec5696e5f851b420b0d8d618b0f876354ab7
+  version: 0.262.0
+  resolution: "flow-parser@npm:0.262.0"
+  checksum: 22ae984eb2474029f2ca7a2304411dcc0e6f0d34dd2075fb181fe17d57cdddd500bc8008f3749799163951a9fd0b281ab3de386c06960e710acf687a3c2fa155
   languageName: node
   linkType: hard
 
@@ -9644,8 +9644,8 @@ __metadata:
   linkType: hard
 
 "minipass-fetch@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "minipass-fetch@npm:4.0.0"
+  version: 4.0.1
+  resolution: "minipass-fetch@npm:4.0.1"
   dependencies:
     encoding: ^0.1.13
     minipass: ^7.0.3
@@ -9654,7 +9654,7 @@ __metadata:
   dependenciesMeta:
     encoding:
       optional: true
-  checksum: 7d59a31011ab9e4d1af6562dd4c4440e425b2baf4c5edbdd2e22fb25a88629e1cdceca39953ff209da504a46021df520f18fd9a519f36efae4750ff724ddadea
+  checksum: 3dfca705ce887ca9ff14d73e8d8593996dea1a1ecd8101fdbb9c10549d1f9670bc8fb66ad0192769ead4c2dc01b4f9ca1cf567ded365adff17827a303b948140
   languageName: node
   linkType: hard
 
@@ -10937,6 +10937,7 @@ __metadata:
     react: 19.0.0
     react-native: 0.78.0
     react-native-builder-bob: ^0.37.0
+    react-native-passkey: ^3.1.0
   languageName: unknown
   linkType: soft
 
@@ -11166,15 +11167,15 @@ __metadata:
   linkType: hard
 
 "recast@npm:^0.23.9":
-  version: 0.23.9
-  resolution: "recast@npm:0.23.9"
+  version: 0.23.10
+  resolution: "recast@npm:0.23.10"
   dependencies:
     ast-types: ^0.16.1
     esprima: ~4.0.0
     source-map: ~0.6.1
     tiny-invariant: ^1.3.3
     tslib: ^2.0.1
-  checksum: be8e896a46b24e30fbeafcd111ff3beaf2b5532d241c199f833fe1c18e89f695b2704cf83f3006fa96a785851019031de0de50bd3e0fd7bb114be18bf2cad900
+  checksum: 7061260fa5998947b45aeeaba704528e66e4022ed17aa9eb625e35462487ce5a2daa250596b0219d0e3eb74b64671661cbcd14f774ac7b9c4b20e9e7744c2112
   languageName: node
   linkType: hard
 
@@ -12368,9 +12369,9 @@ __metadata:
   linkType: hard
 
 "strnum@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "strnum@npm:1.1.1"
-  checksum: 1be70c6ec3793a43d6cd7c58180377fad8b7cf6356276b4dfa22164c2b2105fe0be50624266769230006331dc0058618fbc03de0d4ad9443e99377cc286580f4
+  version: 1.1.2
+  resolution: "strnum@npm:1.1.2"
+  checksum: a85219eda13e97151c95e343a9e5960eacfb0a0ff98104b4c9cb7a212e3008bddf0c9714c9c37c2e508be78e741a04afc80027c2dc18509d1b5ffd4c37191fc2
   languageName: node
   linkType: hard
 
@@ -12989,8 +12990,8 @@ __metadata:
   linkType: hard
 
 "update-browserslist-db@npm:^1.1.1":
-  version: 1.1.2
-  resolution: "update-browserslist-db@npm:1.1.2"
+  version: 1.1.3
+  resolution: "update-browserslist-db@npm:1.1.3"
   dependencies:
     escalade: ^3.2.0
     picocolors: ^1.1.1
@@ -12998,7 +12999,7 @@ __metadata:
     browserslist: ">= 4.21.0"
   bin:
     update-browserslist-db: cli.js
-  checksum: 088d2bad8ddeaeccd82d87d3f6d736d5256d697b725ffaa2b601dfd0ec16ba5fad20db8dcdccf55396e1a36194236feb69e3f5cce772e5be15a5e4261ff2815d
+  checksum: 7b6d8d08c34af25ee435bccac542bedcb9e57c710f3c42421615631a80aa6dd28b0a81c9d2afbef53799d482fb41453f714b8a7a0a8003e3b4ec8fb1abb819af
   languageName: node
   linkType: hard
 

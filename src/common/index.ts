@@ -64,7 +64,7 @@ export class Authenticator {
         },
         rp: {
           name: 'Passkey Test',
-          id: 'w3meetauth.example',
+          id: 'vercel-endpoint.vercel.app',
         },
         pubKeyCredParams: [
           {

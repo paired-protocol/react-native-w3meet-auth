@@ -11,11 +11,13 @@ prepare_react_native_project!
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
-  use_frameworks! :linkage => linkage.to_sym
+  use_frameworks! :linkage => :static
 end
 
 target 'W3meetAuthExample' do
   config = use_native_modules!
+
+  pod 'react-native-passkey', :path => '../node_modules/react-native-passkey'
 
   use_react_native!(
     :path => config[:reactNativePath],

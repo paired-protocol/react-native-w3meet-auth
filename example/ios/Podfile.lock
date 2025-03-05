@@ -1534,7 +1534,7 @@ PODS:
     - React-perflogger (= 0.78.0)
     - React-utils (= 0.78.0)
   - SocketRocket (0.7.1)
-  - W3meetAuth (0.1.5):
+  - W3meetAuth (0.1.6):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1843,9 +1843,9 @@ SPEC CHECKSUMS:
   ReactCodegen: 008c319179d681a6a00966edfc67fda68f9fbb2e
   ReactCommon: 0c097b53f03d6bf166edbcd0915da32f3015dd90
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  W3meetAuth: ebcc2c9bd617042f6af3126e7e05452978ec1bd7
+  W3meetAuth: 92923f999194dea75816f4ba329fbe4b31ef609a
   Yoga: afd04ff05ebe0121a00c468a8a3c8080221cb14c
 
 PODFILE CHECKSUM: 84399e0ee952a98b4b43eb48dfbffe08abd2a7e7
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.15.2

@@ -1,0 +1,27 @@
+import type { ActorMethod, ActorSubclass } from '@dfinity/agent';
+import type { PasskeyCreateResult } from 'react-native-passkey';
+
+export type TPasskey = {
+  user: {
+    id: string;
+    name: string;
+    displayName: string;
+  };
+  rp: {
+    name: string;
+    id: string;
+  };
+};
+
+export type TAuthenticatorProps = {
+  host: string;
+  canisterId: string;
+  passkey: TPasskey;
+};
+
+export type TActor = ActorSubclass<
+  Record<string, ActorMethod<unknown[], unknown>> & {
+    authGenerateChallenge: ActorMethod<[], string>;
+    authValidatePasskey: ActorMethod<[Partial<PasskeyCreateResult>], string>;
+  }
+>;

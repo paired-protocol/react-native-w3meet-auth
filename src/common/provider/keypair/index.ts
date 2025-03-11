@@ -8,10 +8,25 @@ import {
   type JsonnableDelegationChain,
 } from '@dfinity/identity';
 
+import type { TPasskey, TPubKeys } from '../../../types';
+
 export class KeypairProvider {
-  static create() {
+  private static pubkeys: TPubKeys = {};
+
+  static create(user: TPasskey['user']) {
+    const currentPubkey = KeypairProvider.pubkeys[user.id];
+
+    if (currentPubkey) {
+      return currentPubkey;
+    }
+
     const base = Ed25519KeyIdentity.generate();
     const pubkey = toHex(base.getPublicKey().toDer());
+
+    KeypairProvider.pubkeys[user.id] = {
+      base,
+      pubkey,
+    };
 
     return { pubkey, base };
   }

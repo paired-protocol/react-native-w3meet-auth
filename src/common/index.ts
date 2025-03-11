@@ -74,7 +74,7 @@ export class Authenticator {
         },
       };
 
-      const { pubkey, base } = KeypairProvider.create();
+      const { pubkey, base } = KeypairProvider.create(this.passkey.user);
 
       const { error, data } = await this.actor.authValidatePasskey(
         pubkey,

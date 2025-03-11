@@ -13,6 +13,17 @@ export type TPasskey = {
   };
 };
 
+export type TPasskeyAuthenticationResponse = {
+  error?: string;
+  data?: {
+    delegation: {
+      pubkey: string;
+      expiration: string;
+    };
+    signature: string;
+  };
+};
+
 export type TAuthenticatorProps = {
   host: string;
   canisterId: string;
@@ -21,7 +32,10 @@ export type TAuthenticatorProps = {
 
 export type TActor = ActorSubclass<
   Record<string, ActorMethod<unknown[], unknown>> & {
-    authGenerateChallenge: ActorMethod<[], string>;
-    authValidatePasskey: ActorMethod<[Partial<PasskeyCreateResult>], string>;
+    authRegisterPasskey: ActorMethod<[TPasskey['user']], string>;
+    authValidatePasskey: ActorMethod<
+      [string, TPasskey['user'], Partial<PasskeyCreateResult>],
+      TPasskeyAuthenticationResponse
+    >;
   }
 >;

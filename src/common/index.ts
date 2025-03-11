@@ -1,7 +1,9 @@
 import { Actor, HttpAgent } from '@dfinity/agent';
 
 import { idlFactory } from './idlFactory';
+
 import { PasskeyProvider } from './provider/passkey';
+import { KeypairProvider } from './provider/keypair';
 
 import type { TAuthenticatorProps, TActor, TPasskey } from '../types';
 
@@ -46,14 +48,18 @@ export class Authenticator {
   }
 
   async signIn() {
-    const challenge = await this.actor?.authGenerateChallenge();
+    if (!this.passkey) {
+      throw new Error('Invalid passkey data');
+    }
+
+    if (!this.actor) {
+      throw new Error('Invalid actor');
+    }
+
+    const challenge = await this.actor.authRegisterPasskey(this.passkey.user);
 
     if (!challenge) {
       throw new Error('Error when trying to capture challenge');
-    }
-
-    if (!this.passkey) {
-      throw new Error('Invalid passkey data');
     }
 
     try {
@@ -68,9 +74,36 @@ export class Authenticator {
         },
       };
 
-      const validated = await this.actor?.authValidatePasskey(payload);
+      const { pubkey, base } = KeypairProvider.create();
 
-      console.log({ validated });
+      const { error, data } = await this.actor.authValidatePasskey(
+        pubkey,
+        this.passkey.user,
+        payload
+      );
+
+      if (error || !data?.delegation.pubkey) {
+        throw new Error(error);
+      }
+
+      const delegationChain = {
+        delegations: [
+          {
+            delegation: data.delegation,
+            signature: data.signature,
+          },
+        ],
+        publicKey: pubkey,
+      };
+
+      const identity = KeypairProvider.getDelegationIdentity(
+        base,
+        delegationChain
+      );
+
+      console.log('getDelegation', identity.getDelegation());
+      console.log('getPrincipal', identity.getPrincipal().toString());
+      console.log('getPublicKey', identity.getPublicKey().toDer());
     } catch (error) {
       console.log('Error to validate passkey', error);
     }

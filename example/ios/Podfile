@@ -18,6 +18,7 @@ target 'W3meetAuthExample' do
   config = use_native_modules!
 
   pod 'react-native-passkey', :path => '../node_modules/react-native-passkey'
+  pod 'react-native-get-random-values', :path => '../node_modules/react-native-get-random-values'
 
   use_react_native!(
     :path => config[:reactNativePath],

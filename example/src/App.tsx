@@ -7,7 +7,7 @@ const authenticator = Authenticator.config({
   canisterId: 'bw4dl-smaaa-aaaaa-qaacq-cai',
   passkey: {
     user: {
-      id: '1',
+      id: 'dXNlcjEyMw',
       name: 'Passkey Test',
       displayName: 'Passkey Test',
     },
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   loader: {
-    color: 'white',
+    color: 'gray',
     marginTop: 20,
   },
 });

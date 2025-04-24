@@ -1,5 +1,5 @@
 import { Passkey, type PasskeyCreateResult } from 'react-native-passkey';
-
+import { Platform } from 'react-native';
 import type { TPasskey } from '../../../types';
 
 export class PasskeyProvider {
@@ -9,6 +9,10 @@ export class PasskeyProvider {
   ): Promise<PasskeyCreateResult> {
     if (!challenge) {
       throw new Error('Challenge is required');
+    }
+
+    if (Platform.OS === 'android') {
+      challenge = Buffer.from(challenge).toString('base64');
     }
 
     try {

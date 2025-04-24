@@ -6,6 +6,62 @@ import { PasskeyProvider } from './provider/passkey';
 import { KeypairProvider } from './provider/keypair';
 
 import type { TAuthenticatorProps, TActor, TPasskey } from '../types';
+import { Alert } from 'react-native';
+import { IdlBuilder } from './builder/idl';
+import type { ABI } from './builder/idl/@types/ABI';
+
+const abi: ABI = [
+  {
+    name: 'getValue',
+    type: 'function',
+    inputs: [],
+    outputs: ['text'],
+  },
+  {
+    name: 'authRegisterPasskey',
+    type: 'function',
+    inputs: [
+      {
+        id: 'text',
+        displayName: 'text',
+        name: 'text',
+      },
+    ],
+    outputs: ['text'],
+  },
+  {
+    name: 'authValidatePasskey',
+    type: 'function',
+    inputs: [
+      'text',
+      {
+        id: 'text',
+        displayName: 'text',
+        name: 'text',
+      },
+      {
+        id: 'text',
+        response: {
+          clientDataJSON: 'text',
+          attestationObject: 'text',
+        },
+        rawId: 'text',
+      },
+    ],
+    outputs: [
+      {
+        data: {
+          signature: 'text',
+          delegation: {
+            pubkey: 'text',
+            expiration: 'text',
+          },
+        },
+        error: 'text',
+      },
+    ],
+  },
+];
 
 export class Authenticator {
   protected actor: TActor | null = null;
@@ -39,7 +95,11 @@ export class Authenticator {
       console.error(err);
     });
 
-    const actor: TActor = Actor.createActor(idlFactory, {
+    const factory = IdlBuilder.run(abi);
+
+    // console.log({ factory });
+
+    const actor: TActor = Actor.createActor(factory, {
       agent,
       canisterId: props.canisterId,
     });
@@ -57,6 +117,8 @@ export class Authenticator {
     }
 
     const challenge = await this.actor.authRegisterPasskey(this.passkey.user);
+
+    console.log({ challenge });
 
     if (!challenge) {
       throw new Error('Error when trying to capture challenge');
@@ -105,6 +167,7 @@ export class Authenticator {
       console.log('getPrincipal', identity.getPrincipal().toString());
       console.log('getPublicKey', identity.getPublicKey().toDer());
     } catch (error) {
+      Alert.alert('Error to validate passkey', JSON.stringify(error));
       console.log('Error to validate passkey', error);
     }
   }

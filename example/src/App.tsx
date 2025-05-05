@@ -16,6 +16,14 @@ const authenticator = Authenticator.config({
       id: 'vercel-endpoint.vercel.app',
     },
   },
+  abi: [
+    {
+      name: 'getValue',
+      type: 'function',
+      inputs: [],
+      outputs: ['text'],
+    },
+  ],
 });
 
 export default function App() {

@@ -1,4 +1,4 @@
-import { IDL as IDL } from '@dfinity/candid';
+import { IDL } from '@dfinity/candid';
 
 import isString from 'lodash/isString';
 import isPlainObject from 'lodash/isPlainObject';
@@ -37,7 +37,7 @@ export class IdlBuilder {
       return IDL.Record(fields);
     }
 
-    throw new Error(`Tipo não suportado: ${JSON.stringify(def)}`);
+    throw new Error(`Unsupported type: ${JSON.stringify(def)}`);
   }
 
   static run(abi: ABI) {

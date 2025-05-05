@@ -2,6 +2,8 @@ import type { ActorMethod, ActorSubclass } from '@dfinity/agent';
 import type { Ed25519KeyIdentity } from '@dfinity/identity';
 import type { PasskeyCreateResult } from 'react-native-passkey';
 
+import type { ABI } from '../common/builder/idl/@types/ABI';
+
 export type TPubKeys = {
   [key: string]: {
     pubkey: string;
@@ -36,6 +38,7 @@ export type TAuthenticatorProps = {
   host: string;
   canisterId: string;
   passkey: TPasskey;
+  abi: ABI;
 };
 
 export type TActor = ActorSubclass<

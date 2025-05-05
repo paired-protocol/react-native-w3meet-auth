@@ -1,118 +1,55 @@
-import { Alert } from 'react-native';
 import { Actor, HttpAgent } from '@dfinity/agent';
 
-import { PasskeyProvider } from './provider/passkey';
-import { KeypairProvider } from './provider/keypair';
+import isString from 'lodash/isString';
+
+import { IDLProvider } from './provider/idl';
+import { AgentProvider } from './provider/agent';
+import { IteratorProvider } from './provider/iterator';
+
+import type * as Types from './types';
 
 import { IdlBuilder } from './builder/idl';
-import { IDLProvider } from './provider/idl';
-import type { TAuthenticatorProps, TActor, TPasskey } from '../types';
 
-export class Authenticator {
-  protected actor: TActor | null = null;
-  protected passkey: TPasskey | null = null;
+export class Connection {
+  protected agent: HttpAgent | null = null;
+  protected actor: Types.TActor | null = null;
+  protected passkey: Types.TPasskey | null = null;
+  protected properties: Types.TAuthenticatorProps | null = null;
 
-  constructor(actor: TActor, passkey: TPasskey) {
-    this.actor = actor;
-    this.passkey = passkey;
+  constructor(agent: HttpAgent, properties: Types.TAuthenticatorProps) {
+    this.agent = agent;
+    this.properties = properties;
   }
 
-  static config(props: TAuthenticatorProps) {
-    const agent = new HttpAgent({
-      host: props.host,
-      fetchOptions: {
-        reactNative: {
-          __nativeResponseType: 'base64',
-        },
-      },
-      verifyQuerySignatures: true,
-      callOptions: {
-        reactNative: {
-          textStreaming: true,
-        },
-      },
-    });
+  static create(props: Types.TAuthenticatorProps) {
+    const agent = AgentProvider.create(props.host);
 
-    agent.fetchRootKey().catch((err) => {
-      console.warn(
-        'Unable to fetch root key. Check to ensure that your local replica is running'
-      );
-      console.error(err);
-    });
+    if (!isString(props.canisterId)) {
+      throw new Error('Invalid canister id.');
+    }
 
-    const abi = IDLProvider.concat(props.abi);
+    return new Connection(agent, props);
+  }
+
+  config(configurator: Types.TConfiguratorProps) {
+    const abi = IDLProvider.concat(configurator.abi);
     const factory = IdlBuilder.run(abi);
 
-    const actor: TActor = Actor.createActor(factory, {
-      agent,
-      canisterId: props.canisterId,
-    });
-
-    return new Authenticator(actor, props.passkey);
-  }
-
-  async signIn() {
-    if (!this.passkey) {
-      throw new Error('Invalid passkey data');
-    }
-
-    if (!this.actor) {
-      throw new Error('Invalid actor');
-    }
-
-    const challenge = await this.actor.authRegisterPasskey(this.passkey.user);
-
-    console.log({ challenge });
-
-    if (!challenge) {
-      throw new Error('Error when trying to capture challenge');
+    if (!this.agent || !this.properties?.canisterId) {
+      throw new Error('No agent or canister id found.');
     }
 
     try {
-      const passkey = await PasskeyProvider.create(challenge, this.passkey);
+      const actor: Types.TActor = Actor.createActor(factory, {
+        agent: this.agent,
+        canisterId: this.properties.canisterId,
+      });
 
-      const payload = {
-        id: passkey.id,
-        rawId: passkey.rawId,
-        response: {
-          attestationObject: passkey.response.attestationObject,
-          clientDataJSON: passkey.response.clientDataJSON,
-        },
-      };
-
-      const { pubkey, base } = KeypairProvider.create(this.passkey.user);
-
-      const { error, data } = await this.actor.authValidatePasskey(
-        pubkey,
-        this.passkey.user,
-        payload
-      );
-
-      if (error || !data?.delegation.pubkey) {
-        throw new Error(error);
-      }
-
-      const delegationChain = {
-        delegations: [
-          {
-            delegation: data.delegation,
-            signature: data.signature,
-          },
-        ],
-        publicKey: pubkey,
-      };
-
-      const identity = KeypairProvider.getDelegationIdentity(
-        base,
-        delegationChain
-      );
-
-      console.log('getDelegation', identity.getDelegation());
-      console.log('getPrincipal', identity.getPrincipal().toString());
-      console.log('getPublicKey', identity.getPublicKey().toDer());
+      this.actor = actor;
     } catch (error) {
-      Alert.alert('Error to validate passkey', JSON.stringify(error));
-      console.log('Error to validate passkey', error);
+      throw new Error('Unexpected error connecting to canister.');
     }
+
+    return new IteratorProvider(this.actor, configurator, this.properties);
   }
 }

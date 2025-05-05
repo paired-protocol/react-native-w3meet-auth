@@ -8,7 +8,7 @@ import {
   type JsonnableDelegationChain,
 } from '@dfinity/identity';
 
-import type { TPasskey, TPubKeys } from '../../../types';
+import type { TPasskey, TPubKeys } from '../../types';
 
 export class KeypairProvider {
   private static pubkeys: TPubKeys = {};

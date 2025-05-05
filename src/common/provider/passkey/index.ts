@@ -1,6 +1,6 @@
 import { Passkey, type PasskeyCreateResult } from 'react-native-passkey';
 import { Platform } from 'react-native';
-import type { TPasskey } from '../../../types';
+import type { TPasskey } from '../../types';
 
 export class PasskeyProvider {
   static async create(

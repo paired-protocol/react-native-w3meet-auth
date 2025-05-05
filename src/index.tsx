@@ -1,3 +1,3 @@
 import './shim';
 
-export { Authenticator } from './common';
+export { Connection } from './common';

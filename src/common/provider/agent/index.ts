@@ -1,9 +1,11 @@
 import { HttpAgent } from '@dfinity/agent';
+import type { DelegationIdentity } from '@dfinity/identity';
 
 export class AgentProvider {
-  static create(host: string) {
+  static create(host: string, identity?: DelegationIdentity) {
     const agent = new HttpAgent({
       host,
+      identity,
       fetchOptions: {
         reactNative: {
           __nativeResponseType: 'base64',

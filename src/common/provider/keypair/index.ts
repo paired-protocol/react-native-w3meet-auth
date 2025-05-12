@@ -5,7 +5,6 @@ import {
   DelegationIdentity,
   Ed25519KeyIdentity,
   isDelegationValid,
-  type JsonnableDelegationChain,
 } from '@dfinity/identity';
 
 import type { TPasskey, TPubKeys } from '../../types';
@@ -31,11 +30,8 @@ export class KeypairProvider {
     return { pubkey, base };
   }
 
-  static getDelegationIdentity(
-    key: Ed25519KeyIdentity,
-    delegationChain: JsonnableDelegationChain
-  ) {
-    const chain = DelegationChain.fromJSON(delegationChain);
+  static getDelegationIdentity(key: Ed25519KeyIdentity, json: string) {
+    const chain = DelegationChain.fromJSON(json);
 
     if (!isDelegationValid(chain)) {
       throw new Error('Invalid  delegation chain');

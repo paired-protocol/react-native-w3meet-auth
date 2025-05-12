@@ -25,13 +25,7 @@ export type TPasskey = {
 
 export type TPasskeyAuthenticationResponse = {
   error?: string;
-  data?: {
-    delegation: {
-      pubkey: string;
-      expiration: string;
-    };
-    signature: string;
-  };
+  data?: string;
 };
 
 export type TAuthenticatorProps = {

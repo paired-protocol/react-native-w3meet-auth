@@ -19,7 +19,7 @@ export function Button({ title, loading, onPress }: ButtonProps) {
     <TouchableOpacity
       style={styles.container}
       onPress={onPress}
-      activeOpacity={0.9}
+      activeOpacity={0.6}
     >
       <Text style={styles.text}>
         {loading?.status ? loading.message : title}

@@ -56,14 +56,7 @@ export function Login() {
             </>
           )}
 
-          <Button
-            title="Add"
-            onPress={form.create}
-            loading={{
-              status: form.loading,
-              message: 'Adding...',
-            }}
-          />
+          <Button title="Add" onPress={form.add} />
         </BottomSheetView>
       </BottomSheet>
     </View>

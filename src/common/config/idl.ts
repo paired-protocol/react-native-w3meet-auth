@@ -33,13 +33,7 @@ export const IDL = {
       ],
       outputs: [
         {
-          data: {
-            signature: 'text',
-            delegation: {
-              pubkey: 'text',
-              expiration: 'text',
-            },
-          },
+          data: 'text',
           error: 'text',
         },
       ],

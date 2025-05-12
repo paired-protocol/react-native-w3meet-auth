@@ -1,7 +1,11 @@
+import { Actor } from '@dfinity/agent';
 import type * as Types from '../../types';
+import { AgentProvider } from '../agent';
 
 import { KeypairProvider } from '../keypair';
 import { PasskeyProvider } from '../passkey';
+import { IDLProvider } from '../idl';
+import { IdlBuilder } from '../../builder/idl';
 
 export class IteratorProvider {
   constructor(
@@ -56,34 +60,29 @@ export class IteratorProvider {
         payload
       );
 
-      if (error || !data?.delegation.pubkey) {
-        throw new Error(error);
+      console.log({ error, data });
+
+      if (!data) {
+        throw new Error('Error to get delegation chain');
       }
 
-      const delegationChain = {
-        delegations: [
-          {
-            delegation: data.delegation,
-            signature: data.signature,
-          },
-        ],
-        publicKey: pubkey,
-      };
+      const identity = KeypairProvider.getDelegationIdentity(base, data);
 
-      const identity = KeypairProvider.getDelegationIdentity(
-        base,
-        delegationChain
-      );
+      const agent = AgentProvider.create(this.properties.host, identity);
+      const abi = IDLProvider.concat(this.configurator.abi);
 
-      return identity;
+      const factory = IdlBuilder.run(abi);
+
+      const authenticatedActor = Actor.createActor(factory, {
+        agent,
+        canisterId: this.properties.canisterId,
+      });
+
+      return { identity, authenticatedActor };
     } catch (error) {
       console.log('Error to validate passkey', error);
 
       throw new Error('Error to validate passkey');
     }
-  }
-
-  authentitate() {
-    console.log({ actor: this.actor });
   }
 }

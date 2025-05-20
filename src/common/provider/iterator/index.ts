@@ -1,11 +1,14 @@
 import { Actor } from '@dfinity/agent';
-import type * as Types from '../../types';
-import { AgentProvider } from '../agent';
 
+import type * as Types from '../../types';
+
+import { AgentProvider } from '../agent';
 import { KeypairProvider } from '../keypair';
 import { PasskeyProvider } from '../passkey';
 import { IDLProvider } from '../idl';
 import { IdlBuilder } from '../../builder/idl';
+
+import isEqual from 'lodash/isEqual';
 
 export class IteratorProvider {
   constructor(
@@ -60,9 +63,7 @@ export class IteratorProvider {
         payload
       );
 
-      console.log({ error, data });
-
-      if (!data) {
+      if (!data || error) {
         throw new Error('Error to get delegation chain');
       }
 
@@ -73,16 +74,30 @@ export class IteratorProvider {
 
       const factory = IdlBuilder.run(abi);
 
-      const authenticatedActor = Actor.createActor(factory, {
+      const actor: any = Actor.createActor(factory, {
         agent,
         canisterId: this.properties.canisterId,
       });
 
-      return { identity, authenticatedActor };
+      return { identity, actor };
     } catch (error) {
       console.log('Error to validate passkey', error);
 
       throw new Error('Error to validate passkey');
     }
+  }
+
+  call(method: string, ...args: any): Promise<any> {
+    if (!this.actor) {
+      throw new Error('No actor found');
+    }
+
+    const actorMethod = this.actor[method];
+
+    if (!actorMethod || !isEqual(typeof actorMethod, 'function')) {
+      throw new Error(`Method ${method} not found on actor`);
+    }
+
+    return actorMethod(...args);
   }
 }

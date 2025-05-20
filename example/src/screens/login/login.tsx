@@ -52,7 +52,7 @@ export function Login() {
               </Text>
 
               <Text style={styles.principal}>{form.selected.principal}</Text>
-              <Text style={styles.amount}>23</Text>
+              <Text style={styles.amount}>{form.value}</Text>
             </>
           )}
 

@@ -1,14 +1,13 @@
 import { useCallback, useRef, useState } from 'react';
 import { Alert } from 'react-native';
 
+import { MMKVLoader, useMMKVStorage } from 'react-native-mmkv-storage';
 import { Connection } from 'react-native-w3meet-auth';
+
 import BottomSheet from '@gorhom/bottom-sheet';
 
 import { StringHelper } from '../../../helpers/string';
 import type { IteratorProvider } from '../../../../../src/common/provider/iterator';
-
-import { MMKVLoader, useMMKVStorage } from 'react-native-mmkv-storage';
-import type { Actor } from '@dfinity/agent';
 
 const connection = Connection.create({
   host: 'http://127.0.0.1:4943',
@@ -19,7 +18,18 @@ const storage = new MMKVLoader().initialize();
 
 const abi = [
   {
-    name: 'addValueToUser',
+    name: 'addUserValue',
+    type: 'function',
+    inputs: [],
+    outputs: [
+      {
+        principal: 'text',
+        value: 'int',
+      },
+    ],
+  },
+  {
+    name: 'getUserValue',
     type: 'function',
     inputs: [],
     outputs: [
@@ -34,8 +44,9 @@ const abi = [
 export function useForm() {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
+  const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [actor, setActor] = useState<Actor | null>(null);
+  const [iterator, setIterator] = useState<IteratorProvider | null>(null);
 
   const [selected, setSelected] = useState({
     id: '',
@@ -73,12 +84,16 @@ export function useForm() {
           abi,
         });
 
-        const { identity, authenticatedActor } =
-          await iteratorConfig.authenticate();
+        const authetication = await iteratorConfig.authenticate();
+        const principal = authetication.identity.getPrincipal().toString();
 
-        const principal = identity.getPrincipal().toString();
+        const response = await authetication?.actor?.getUserValue();
 
-        setActor(authenticatedActor);
+        if (response) {
+          setValue(response.value);
+        }
+
+        setIterator(iteratorConfig);
 
         if (principal && !users.includes(id)) {
           setUsers((previous) => [...previous, id!]);
@@ -106,17 +121,14 @@ export function useForm() {
   }, [authenticate]);
 
   const add = useCallback(async () => {
-    console.log({ actor });
-    if (actor) {
-      try {
-        const response = await actor.addValueToUser();
+    try {
+      const response = await iterator?.call('addUserValue', {});
 
-        console.log({ response });
-      } catch (error) {
-        console.log({ error });
-      }
+      setValue(response.value);
+    } catch (error) {
+      console.log({ error });
     }
-  }, [actor]);
+  }, [iterator]);
 
   const select = useCallback(
     async (id: string) => {
@@ -125,5 +137,14 @@ export function useForm() {
     [authenticate]
   );
 
-  return { loading, create, add, select, users, selected, bottomSheetRef };
+  return {
+    loading,
+    create,
+    add,
+    select,
+    users,
+    selected,
+    bottomSheetRef,
+    value,
+  };
 }

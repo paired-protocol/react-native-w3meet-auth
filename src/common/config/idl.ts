@@ -1,6 +1,19 @@
 export const IDL = {
   auth: [
     {
+      name: 'authInvalidatePasskey',
+      type: 'function',
+      inputs: [
+        {
+          id: 'text',
+          displayName: 'text',
+          name: 'text',
+        },
+        'text',
+      ],
+      outputs: ['bool'],
+    },
+    {
       name: 'authRegisterPasskey',
       type: 'function',
       inputs: [

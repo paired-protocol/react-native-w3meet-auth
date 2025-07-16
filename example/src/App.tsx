@@ -1,11 +1,19 @@
 import { StyleSheet } from 'react-native';
-import { Login } from './screens/login/login';
+
+import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
+import { Routes } from './routes';
+import { MainContext } from './contexts/main';
 
 export default function App() {
   return (
     <GestureHandlerRootView style={styles.container}>
-      <Login />
+      <NavigationContainer>
+        <MainContext>
+          <Routes />
+        </MainContext>
+      </NavigationContainer>
     </GestureHandlerRootView>
   );
 }

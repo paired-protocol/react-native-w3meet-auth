@@ -15,8 +15,6 @@ export class KeypairProvider {
   static create(user: TPasskey['user']) {
     const currentPubkey = KeypairProvider.pubkeys[user.id];
 
-    console.log({ currentPubkey });
-
     if (currentPubkey) {
       return currentPubkey;
     }

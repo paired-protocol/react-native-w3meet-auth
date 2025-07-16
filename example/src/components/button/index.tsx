@@ -11,13 +11,14 @@ interface ButtonProps {
     status: boolean;
     message?: string;
   };
+  style?: any;
   onPress: () => void;
 }
 
-export function Button({ title, loading, onPress }: ButtonProps) {
+export function Button({ title, loading, style, onPress }: ButtonProps) {
   return (
     <TouchableOpacity
-      style={styles.container}
+      style={[styles.container, style]}
       onPress={onPress}
       activeOpacity={0.6}
     >

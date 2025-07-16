@@ -1,106 +1,58 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
 
-import { MMKVLoader, useMMKVStorage } from 'react-native-mmkv-storage';
 import { Connection } from 'react-native-w3meet-auth';
+import { MMKVLoader, useMMKVStorage } from 'react-native-mmkv-storage';
 
-import BottomSheet from '@gorhom/bottom-sheet';
-
+import { useMainContext } from '../../../contexts/main';
 import { StringHelper } from '../../../helpers/string';
-import type { IteratorProvider } from '../../../../../src/common/provider/iterator';
 
 const connection = Connection.create({
   host: 'http://127.0.0.1:4943',
-  canisterId: 'bw4dl-smaaa-aaaaa-qaacq-cai',
+  canisterId: 'avqkn-guaaa-aaaaa-qaaea-cai',
 });
 
 const storage = new MMKVLoader().initialize();
 
-const abi = [
-  {
-    name: 'addUserValue',
-    type: 'function',
-    inputs: [],
-    outputs: [
-      {
-        principal: 'text',
-        value: 'int',
-      },
-    ],
-  },
-  {
-    name: 'getUserValue',
-    type: 'function',
-    inputs: [],
-    outputs: [
-      {
-        principal: 'text',
-        value: 'int',
-      },
-    ],
-  },
-];
-
 export function useForm() {
-  const bottomSheetRef = useRef<BottomSheet>(null);
-
-  const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [iterator, setIterator] = useState<IteratorProvider | null>(null);
 
-  const [selected, setSelected] = useState({
-    id: '',
-    principal: '',
-  });
-
+  const { setIteratorCanisterProvider } = useMainContext();
   const [users, setUsers] = useMMKVStorage<string[]>('users', storage, []);
 
   const authenticate = useCallback(
-    async (id?: string) => {
+    async (id: string) => {
       setLoading(true);
 
       try {
-        if (!id) {
-          id = StringHelper.generateRandomChars(8);
-        }
-
         if (!id) {
           Alert.alert('Error', 'Please select a user.');
           return;
         }
 
-        const iteratorConfig = connection.config({
+        const iterator = connection.config({
           passkey: {
             user: {
               id,
-              name: 'Nadson Fernando',
-              displayName: 'Nadson Fernando',
+              name: id,
+              displayName: id,
             },
             rp: {
               name: 'Passkey Test',
               id: 'vercel-endpoint.vercel.app',
             },
           },
-          abi,
+          abi: [],
         });
 
-        const authetication = await iteratorConfig.authenticate();
-        const principal = authetication.identity.getPrincipal().toString();
+        const authetication = await iterator.authenticate();
+        const principal = authetication.identity.getPrincipal();
 
-        const response = await authetication?.actor?.getUserValue();
+        console.log('Principal:', principal.toString());
 
-        if (response) {
-          setValue(response.value);
+        if (principal) {
+          setIteratorCanisterProvider(iterator);
         }
-
-        setIterator(iteratorConfig);
-
-        if (principal && !users.includes(id)) {
-          setUsers((previous) => [...previous, id!]);
-        }
-
-        setSelected({ id, principal });
-        bottomSheetRef.current?.snapToIndex(0);
 
         setLoading(false);
       } catch (error) {
@@ -113,38 +65,55 @@ export function useForm() {
         setLoading(false);
       }
     },
-    [setUsers, users, bottomSheetRef]
+    [setIteratorCanisterProvider]
   );
 
   const create = useCallback(async () => {
-    authenticate();
-  }, [authenticate]);
-
-  const add = useCallback(async () => {
+    setLoading(true);
     try {
-      const response = await iterator?.call('addUserValue', {});
+      const id = StringHelper.generateRandomChars(8);
 
-      setValue(response.value);
+      const iterator = connection.config({
+        passkey: {
+          user: {
+            id,
+            name: id,
+            displayName: id,
+          },
+          rp: {
+            name: id,
+            id: 'vercel-endpoint.vercel.app',
+          },
+        },
+        abi: [],
+      });
+
+      const authetication = await iterator.authenticate();
+      const principal = authetication.identity.getPrincipal();
+
+      if (principal) {
+        setIteratorCanisterProvider(iterator);
+
+        if (!users.includes(id)) {
+          setUsers((previous) => [...previous, id!]);
+        }
+      }
+
+      setLoading(false);
     } catch (error) {
-      console.log({ error });
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      } else {
+        Alert.alert('An unknown error occurred');
+      }
+      setLoading(false);
     }
-  }, [iterator]);
-
-  const select = useCallback(
-    async (id: string) => {
-      authenticate(id);
-    },
-    [authenticate]
-  );
+  }, [setIteratorCanisterProvider, setUsers, users]);
 
   return {
     loading,
     create,
-    add,
-    select,
     users,
-    selected,
-    bottomSheetRef,
-    value,
+    authenticate,
   };
 }

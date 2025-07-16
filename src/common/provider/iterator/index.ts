@@ -1,4 +1,5 @@
 import { Actor } from '@dfinity/agent';
+import { IDL } from '@dfinity/candid';
 
 import type * as Types from '../../types';
 
@@ -78,6 +79,24 @@ export class IteratorProvider {
         agent,
         canisterId: this.properties.canisterId,
       });
+
+      //test rust actor
+
+      const rustFactory = ({ IDL }) => {
+        return IDL.Service({
+          greet: IDL.Func([IDL.Text], [IDL.Text], ['query']),
+        });
+      };
+
+      const rustAgent = AgentProvider.create('http://127.0.0.1:4946', identity);
+      const rustActor: any = Actor.createActor(rustFactory, {
+        agent: rustAgent,
+        canisterId: 'bkyz2-fmaaa-aaaaa-qaaaq-cai',
+      });
+
+      console.log('Rust actor response', await rustActor.greet('Test'));
+
+      this.actor = actor;
 
       return { identity, actor };
     } catch (error) {

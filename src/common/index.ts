@@ -1,55 +1,97 @@
 import { Actor, HttpAgent } from '@dfinity/agent';
-
-import isString from 'lodash/isString';
-
-import { IDLProvider } from './provider/idl';
+import { IDLBuilder } from './builder/idl';
 import { AgentProvider } from './provider/agent';
-import { IteratorProvider } from './provider/iterator';
+import { IDLProvider } from './provider/idl';
+import { PasskeyProvider } from './provider/passkey';
+import { KeypairProvider } from './provider/keypair';
+import type { DelegationIdentity } from '@dfinity/identity';
+import { AttachmentProvider } from './provider/attachment';
 
-import type * as Types from './types';
+export class CanisterAuthConnector {
+  protected canister: Canister;
+  protected agent: HttpAgent;
+  protected identity?: DelegationIdentity;
 
-import { IdlBuilder } from './builder/idl';
+  constructor(props: CanisterAuthConnectorProps) {
+    this.canister = props.canister;
 
-export class Connection {
-  protected agent: HttpAgent | null = null;
-  protected actor: Types.TActor | null = null;
-  protected passkey: Types.TPasskey | null = null;
-  protected properties: Types.TAuthenticatorProps | null = null;
-
-  constructor(agent: HttpAgent, properties: Types.TAuthenticatorProps) {
-    this.agent = agent;
-    this.properties = properties;
-  }
-
-  static create(props: Types.TAuthenticatorProps) {
-    const agent = AgentProvider.create(props.host);
-
-    if (!isString(props.canisterId)) {
-      throw new Error('Invalid canister id.');
+    if (!this.canister || !this.canister.id || !this.canister.host) {
+      throw new Error('Canister not initialized properly.');
     }
 
-    return new Connection(agent, props);
+    this.agent = AgentProvider.create(props.canister.host);
+
+    if (!this.agent) {
+      throw new Error('Invalid agent.');
+    }
   }
 
-  config(configurator: Types.TConfiguratorProps) {
-    const abi = IDLProvider.concat(configurator.abi);
-    const factory = IdlBuilder.run(abi);
+  getIdentity() {
+    return this.identity;
+  }
 
-    if (!this.agent || !this.properties?.canisterId) {
-      throw new Error('No agent or canister id found.');
+  async invoke(props: CanisterAuthInvokeProps) {
+    if (!props.passkey) {
+      throw new Error('Invalid passkey data.');
     }
+
+    const idl = IDLBuilder.run(IDLProvider.join(props.abi));
 
     try {
-      const actor: Types.TActor = Actor.createActor(factory, {
+      const actor: CanisterAuthConnectorActor = Actor.createActor(idl, {
         agent: this.agent,
-        canisterId: this.properties.canisterId,
+        canisterId: this.canister.id,
       });
 
-      this.actor = actor;
-    } catch (error) {
-      throw new Error('Unexpected error connecting to canister.');
+      const challenge = await actor.authRegisterPasskey(props.passkey.user);
+
+      if (!challenge) {
+        throw new Error('Error when trying to generate challenge.');
+      }
+
+      const passkey = await PasskeyProvider.create(challenge, props.passkey);
+
+      const payload = {
+        id: passkey.id,
+        rawId: passkey.rawId,
+        response: {
+          attestationObject: passkey.response.attestationObject,
+          clientDataJSON: passkey.response.clientDataJSON,
+        },
+      };
+
+      const { pubkey, base } = KeypairProvider.create(props.passkey.user);
+
+      const { error, data } = await actor.authValidatePasskey(
+        pubkey,
+        props.passkey.user,
+        payload
+      );
+
+      if (!data || error) {
+        throw new Error('Error to get delegation chain.');
+      }
+
+      this.identity = KeypairProvider.getDelegationIdentity(base, data);
+    } catch (error: any) {
+      throw new Error(
+        error?.message || 'Unexpected error connecting to canister.'
+      );
+    }
+  }
+
+  attachCanister(props: CanisterAttachProps) {
+    if (props.useAuthentication && !this.identity) {
+      throw new Error('Authentication is required to attach the canister.');
     }
 
-    return new IteratorProvider(this.actor, configurator, this.properties);
+    return new AttachmentProvider(
+      {
+        id: props.id,
+        host: props.host,
+      },
+      props.abi,
+      this.identity
+    );
   }
 }

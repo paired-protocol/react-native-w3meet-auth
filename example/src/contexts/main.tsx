@@ -6,7 +6,7 @@ import {
   type PropsWithChildren,
 } from 'react';
 
-import type { IteratorProvider } from '../../../src/common/provider/iterator';
+import type { IteratorProvider } from '../../../src/common-deprecated/provider/iterator';
 
 const Context = createContext({} as Record<string, any>);
 

@@ -16,7 +16,7 @@ const types: Record<string, IDL.Type> = {
   float64: IDL.Float64,
 };
 
-export class IDLBuilder {
+export class IdlBuilder {
   static parseType(def: string | Record<string, string>) {
     if (isString(def)) {
       const type = types[def.toLowerCase()];
@@ -32,7 +32,7 @@ export class IDLBuilder {
       const fields: Record<string, IDL.Type> = {};
 
       for (const [key, type] of Object.entries(def)) {
-        fields[key] = IDLBuilder.parseType(type);
+        fields[key] = IdlBuilder.parseType(type);
       }
 
       return IDL.Record(fields);
@@ -54,8 +54,8 @@ export class IDLBuilder {
 
     for (const method of abi) {
       const methodName = method.name;
-      const inputs = method.inputs.map(IDLBuilder.parseType);
-      const outputs = method.outputs.map(IDLBuilder.parseType);
+      const inputs = method.inputs.map(IdlBuilder.parseType);
+      const outputs = method.outputs.map(IdlBuilder.parseType);
 
       serviceDef[methodName] = IDL.Func(inputs, outputs, []);
     }

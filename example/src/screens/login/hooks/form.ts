@@ -12,6 +12,36 @@ const connection = Connection.create({
   canisterId: 'avqkn-guaaa-aaaaa-qaaea-cai',
 });
 
+const authConnector = new CanisterAuthConnector({
+  canister: {
+    id: 'avqkn-guaaa-aaaaa-qaaea-cai',
+    host: 'http://127.0.0.1:4943',
+  },
+});
+
+authConnector.invoke({
+  passkey: {
+    user: {
+      id: 'test-user',
+      name: 'Test User',
+      displayName: 'Test User',
+    },
+    rp: {
+      name: 'Passkey Test',
+      id: 'vercel-endpoint.vercel.app',
+    },
+  },
+});
+
+const token = authConnector.attachCanister({
+  useAuthentication: true,
+  id: 'dvqkn-guaaa-aaaaa-qaaea-cai',
+  host: 'http://127.0.0.1:4944',
+  abi: [],
+});
+
+token.call('greet');
+
 const storage = new MMKVLoader().initialize();
 
 export function useForm() {
